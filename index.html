@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta charset='utf-8'/>
 <html>
   <head>
     <title>Precision issue with Musl 1.2.0</title>
@@ -114,16 +115,16 @@
       <label for="js">JavaScript math</label>
       <input type="radio" class="btn-radio" name="btn-group" value="std" id="std"/>
       <label for="std">musl 1.1.15 (emscripten)</label>
-      <input type="radio" class="btn-radio" name="btn-group" value="new" id="new"/>
-      <label for="new">musl 1.2.0 (with issue)</label>
+      <input type="radio" class="btn-radio" name="btn-group" value="bug" id="bug"/>
+      <label for="bug">musl 1.2.0 (with issue)</label>
     </div>
     <canvas></canvas>
     <script>
       "use strict";
 
-      const MANDELBROT_NEW_LIBM_PATH = 'build/mandelbrot-new-libm.wasm';
-      const MANDELBROT_STD_LIBM_PATH = 'build/mandelbrot-std-libm.wasm';
       const MANDELBROT_JS_LIBM_PATH  = 'build/mandelbrot-js-libm.wasm';
+      const MANDELBROT_STD_LIBM_PATH = 'build/mandelbrot-std-libm.wasm';
+      const MANDELBROT_BUG_LIBM_PATH = 'build/mandelbrot-new-libm.wasm';
 
       const imageDatas = {};
 
@@ -197,6 +198,7 @@
         imageDatas[name] = imageData;
 
         if (name == 'js') {
+          window.location.hash = '#' + name;
           ctx.putImageData(imageData, 0, 0);
         }
       }
@@ -204,6 +206,7 @@
       document
       .getElementsByName("btn-group")
       .forEach(btn => btn.addEventListener('click', _ => {
+        window.location.hash = '#' + btn.value;
         const imageData = imageDatas[btn.value];
         ctx.putImageData(imageData, 0, 0);
       }));
@@ -228,7 +231,7 @@
 
       setup('js',  MANDELBROT_JS_LIBM_PATH);
       setup('std', MANDELBROT_STD_LIBM_PATH);
-      setup('new', MANDELBROT_NEW_LIBM_PATH);
+      setup('bug', MANDELBROT_BUG_LIBM_PATH);
 
     </script>
   </body>
