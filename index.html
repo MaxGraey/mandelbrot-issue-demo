@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Precision issue with Musl 1.2.0</title>
+    <link rel="icon" href="https://assemblyscript.org/favicon.ico" type="image/x-icon" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        color: #111;
+        background: #2f2f2f;
+        font-family: sans-serif;
+        box-sizing: border-box;
+      }
+
+      *,
+      *:before,
+      *:after {
+        box-sizing: inherit;
+      }
+
+      h1 {
+        padding: 20px;
+        font-size: 12pt;
+        margin: 0;
+      }
+
+      a {
+        color: #111;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: #0074C1;
+        text-decoration: underline;
+      }
+
+      canvas {
+        position: absolute;
+        top: 60px;
+        left: 8px;
+        width: calc(100% - 16px);
+        height: calc(100% - 69px);
+        background: #eee;
+      }
+
+      canvas.gradient {
+        left: 0;
+        top: 0;
+        height: 4px;
+        width: 100%;
+      }
+
+      .btn-radio-group {
+        margin-top: 14px;
+        clear: both;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .btn-radio-group .btn-radio {
+        display: inline-block;
+        position: absolute;
+        left: -9999em;
+        top: -9999em;
+      }
+
+      .btn-radio-group .btn-radio + label {
+        display: inline-block;
+        text-align: center;
+        padding: .6em 1em;
+        cursor: pointer;
+        min-width: 260px;
+        border: 0;
+        margin-right: -1px;
+        color: #fff;
+        background-color: #253dc9;
+      }
+
+      .btn-radio-group .btn-radio + label:first-of-type {
+        border-radius: 2em 0 0 2em;
+      }
+
+      .btn-radio-group .btn-radio + label:last-of-type {
+        border-radius: 0 2em 2em 0;
+        background-color: #ff5e00;
+        color: #fff;
+      }
+
+      .btn-radio-group .btn-radio:checked + label {
+        background-color: #205de0;
+        transform: scale(1.05, 1.05);
+        font-weight: 600;
+      }
+
+      .btn-radio-group .btn-radio:checked + label:first-of-type {
+        transform-origin: right;
+      }
+
+      .btn-radio-group .btn-radio:checked + label:last-of-type {
+        background-color: #ff4800;
+        transform-origin: left;
+        color: #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="btn-radio-group">
+      <input type="radio" class="btn-radio" name="btn-group" value="js" id="js" checked/>
+      <label for="js">JavaScript math</label>
+      <input type="radio" class="btn-radio" name="btn-group" value="std" id="std"/>
+      <label for="std">musl 1.1.15 (emscripten)</label>
+      <input type="radio" class="btn-radio" name="btn-group" value="new" id="new"/>
+      <label for="new">musl 1.2.0 (with issue)</label>
+    </div>
+    <canvas></canvas>
+    <script>
+      "use strict";
+
+      const MANDELBROT_NEW_LIBM_PATH = 'build/mandelbrot-new-libm.wasm';
+      const MANDELBROT_STD_LIBM_PATH = 'build/mandelbrot-std-libm.wasm';
+      const MANDELBROT_JS_LIBM_PATH  = 'build/mandelbrot-js-libm.wasm';
+
+      const imageDatas = {};
+
+      const imports = {
+        env: {
+          memoryBase: 0,
+          tableBase:  0,
+          // for *-std-libm
+          _llvm_log2_f64(x) {
+            return Math.log2(x);
+          },
+          // for *-js-libm
+          _js_log_f64(x) {
+            return Math.log(x);
+          },
+          _js_log2_f64(x) {
+            return Math.log2(x);
+          }
+        }
+      };
+
+      async function loadAndInit(name) {
+        const memory = new WebAssembly.Memory({ initial: 256, maximum: 256 });
+        const res1   = await fetch(name);
+        const buffer = await res1.arrayBuffer();
+        const result = await WebAssembly.instantiate(buffer, { ...imports, env: { ...imports.env, memory } });
+        return {
+          computeLine: result.instance.exports.__Z11computeLinejjjj,
+          memory,
+        };
+      }
+
+      // Set up the canvas with a 2D rendering context
+      const cnv = document.getElementsByTagName("canvas")[0];
+      const ctx = cnv.getContext("2d");
+      const bcr = cnv.getBoundingClientRect();
+
+      const limit  = 40;
+
+      // Compute the size of the viewport
+      const ratio  = window.devicePixelRatio || 1;
+      const width  = bcr.width  * ratio;
+      const height = bcr.height * ratio;
+      const size   = width * height;
+
+      cnv.width  = width;
+      cnv.height = height;
+
+      ctx.scale(ratio, ratio);
+
+      async function setup(name, path) {
+        const exports = await loadAndInit(path);
+        const computeLine = exports.computeLine;
+        const memory      = exports.memory;
+
+        const imageData = ctx.createImageData(width, height);
+        const mem  = new Uint16Array(memory.buffer, 0, size);
+        const argb = new Uint32Array(imageData.data.buffer);
+
+        const updateLine = function updateLine(y) {
+          var yx = y * width;
+          for (let x = 0; x < width; ++x) {
+            argb[yx + x] = colors[mem[yx + x]];
+          }
+        };
+
+        for (let y = 0; y < height; ++y) {
+          computeLine(y, width, height, limit);
+          updateLine(y);
+        }
+        imageDatas[name] = imageData;
+
+        if (name == 'js') {
+          ctx.putImageData(imageData, 0, 0);
+        }
+      }
+
+      document
+      .getElementsByName("btn-group")
+      .forEach(btn => btn.addEventListener('click', _ => {
+        const imageData = imageDatas[btn.value];
+        ctx.putImageData(imageData, 0, 0);
+      }));
+      // Compute a nice set of colors using a gradient
+      const colors = (() => {
+        var cnv = document.createElement("canvas");
+        cnv.width  = 2048;
+        cnv.height = 1;
+        var ctx = cnv.getContext("2d");
+        var grd = ctx.createLinearGradient(0, 0, 2048, 0);
+        grd.addColorStop(0.0000, "#000764");
+        grd.addColorStop(0.1600, "#2068CB");
+        grd.addColorStop(0.4200, "#EDFFFF");
+        grd.addColorStop(0.6425, "#FFAA00");
+        grd.addColorStop(0.8575, "#000200");
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, 2048, 1);
+        cnv.className = "gradient";
+        setTimeout(() => document.body.appendChild(cnv));
+        return new Uint32Array(ctx.getImageData(0, 0, 2048, 1).data.buffer);
+      })();
+
+      setup('js',  MANDELBROT_JS_LIBM_PATH);
+      setup('std', MANDELBROT_STD_LIBM_PATH);
+      setup('new', MANDELBROT_NEW_LIBM_PATH);
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build:wasm:new": "em++ mandelbrot-new-libm.cpp -std=c++14 -O3 -s WASM=1 -o build/mandelbrot-new-libm.wasm",
+    "build:wasm:std": "em++ mandelbrot-std-libm.cpp -std=c++14 -O3 -s WASM=1 -o build/mandelbrot-std-libm.wasm",
+    "build:wasm:js":  "em++ mandelbrot-js-libm.cpp  -std=c++14 -O3 -s WASM=1 -o build/mandelbrot-js-libm.wasm -s ERROR_ON_UNDEFINED_SYMBOLS=0",
+    "build:wasm":     "npm run build:wasm:new && npm run build:wasm:std && npm run build:wasm:js"
+  }
+}
