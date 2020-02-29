@@ -196,9 +196,8 @@
           updateLine(y);
         }
         imageDatas[name] = imageData;
-
-        if (name == 'js') {
-          window.location.hash = '#' + name;
+        if (!window.location.hash) window.location.hash = '#js';
+        if (name == window.location.hash.substr(1)) {
           ctx.putImageData(imageData, 0, 0);
         }
       }
