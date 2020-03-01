@@ -1,3 +1,6 @@
+Thread model: posix
+gcc version 9.2.0 (Homebrew GCC 9.2.0_3)
+
 log2(0.5 * log(x)):
 
 arg:    9.3927236765809266
