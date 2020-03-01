@@ -20,29 +20,45 @@ extern "C" {
 #include "bits/alltypes.h"
 
 #if 100*__GNUC__+__GNUC_MINOR__ >= 303
+#ifndef NAN
 #define NAN       __builtin_nanf("")
+#endif
+#ifndef INFINITY
 #define INFINITY  __builtin_inff()
+#endif
 #else
+#ifndef NAN
 #define NAN       (0.0f/0.0f)
+#endif
+#ifndef INFINITY
 #define INFINITY  1e5000f
 #endif
+#endif
 
+#ifndef HUGE_VALF
 #define HUGE_VALF INFINITY
 #define HUGE_VAL  ((double)INFINITY)
 #define HUGE_VALL ((long double)INFINITY)
+#endif
 
+#ifndef MATH_ERRNO
 #define MATH_ERRNO  1
 #define MATH_ERREXCEPT 2
 #define math_errhandling 2
+#endif
 
+#ifndef FP_ILOGBNAN
 #define FP_ILOGBNAN (-1-0x7fffffff)
 #define FP_ILOGB0 FP_ILOGBNAN
+#endif
 
+#ifndef FP_NAN
 #define FP_NAN       0
 #define FP_INFINITE  1
 #define FP_ZERO      2
 #define FP_SUBNORMAL 3
 #define FP_NORMAL    4
+#endif
 
 #ifdef __FP_FAST_FMA
 #define FP_FAST_FMA 1
