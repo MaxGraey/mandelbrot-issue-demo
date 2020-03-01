@@ -17,8 +17,8 @@
 const struct __log2_data {
 	double invln2hi;
 	double invln2lo;
-	double poly[LOG2_POLY_ORDER - 1];
 	double poly1[LOG2_POLY1_ORDER - 1];
+	double poly[LOG2_POLY_ORDER - 1];
 	struct {
 		double invc, logc;
 	} tab[1 << LOG2_TABLE_BITS];

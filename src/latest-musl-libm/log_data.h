@@ -17,14 +17,16 @@
 const struct log_data {
 	double ln2hi;
 	double ln2lo;
-	double poly[LOG_POLY_ORDER - 1]; /* First coefficient is 1.  */
 	double poly1[LOG_POLY1_ORDER - 1];
+	double poly[LOG_POLY_ORDER - 1]; /* First coefficient is 1.  */
 	struct {
 		double invc, logc;
 	} tab[1 << LOG_TABLE_BITS];
+#if !__FP_FAST_FMA
 	struct {
 		double chi, clo;
 	} tab2[1 << LOG_TABLE_BITS];
+#endif
 } __log_data = {
 .ln2hi = 0x1.62e42fefa3800p-1,
 .ln2lo = 0x1.ef35793c76730p-45,
