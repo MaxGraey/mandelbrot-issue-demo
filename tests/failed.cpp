@@ -14,8 +14,8 @@ int64_t ulpDiffs(double x, double y) {
   if (isnan(x) && isnan(y)) return  0;
   if (isnan(x) || isnan(y)) return -1;
 
-  uint64_t lc = reinterpret_cast<uint64_t&>(x);
-  uint64_t rc = reinterpret_cast<uint64_t&>(y);
+  int64_t lc = reinterpret_cast<int64_t&>(x);
+  int64_t rc = reinterpret_cast<int64_t&>(y);
 
   if ((lc < 0) != (rc < 0)) {
     return x == y ? 0 : -1;
