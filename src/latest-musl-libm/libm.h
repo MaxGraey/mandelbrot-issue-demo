@@ -7,6 +7,59 @@
 // #include <endian.h>
 // #include "fp_arch.h"
 
+// part from math.h
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <features.h>
+
+#define __NEED_float_t
+#define __NEED_double_t
+#include <bits/alltypes.h>
+
+#if 100*__GNUC__+__GNUC_MINOR__ >= 303
+#define NAN       __builtin_nanf("")
+#define INFINITY  __builtin_inff()
+#else
+#define NAN       (0.0f/0.0f)
+#define INFINITY  1e5000f
+#endif
+
+#define HUGE_VALF INFINITY
+#define HUGE_VAL  ((double)INFINITY)
+#define HUGE_VALL ((long double)INFINITY)
+
+#define MATH_ERRNO  1
+#define MATH_ERREXCEPT 2
+#define math_errhandling 2
+
+#define FP_ILOGBNAN (-1-0x7fffffff)
+#define FP_ILOGB0 FP_ILOGBNAN
+
+#define FP_NAN       0
+#define FP_INFINITE  1
+#define FP_ZERO      2
+#define FP_SUBNORMAL 3
+#define FP_NORMAL    4
+
+#ifdef __FP_FAST_FMA
+#define FP_FAST_FMA 1
+#endif
+
+#ifdef __FP_FAST_FMAF
+#define FP_FAST_FMAF 1
+#endif
+
+#ifdef __FP_FAST_FMAL
+#define FP_FAST_FMAL 1
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
 union ldshape {
 	long double f;
 	struct {
