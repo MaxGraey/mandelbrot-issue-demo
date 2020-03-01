@@ -44,7 +44,7 @@ int main() {
 
   for (int i = 0; i < sizeof inputs / 8; i++) {
     double input    = inputs[i];
-    double actual   = _log2(0.5 * _log(input)); // masl
+    double actual   = _log2(0.5 * _log(input)); // musl 1.2.0
     double expected =  log2(0.5 *  log(input)); // libc
     printf("\narg:    %.17g\n", input);
     printf("---------------------------------------------------\n");
