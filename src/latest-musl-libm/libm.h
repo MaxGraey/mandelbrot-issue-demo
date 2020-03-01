@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <float.h>
-#include <math.h>
+// #include <math.h>
 // #include <endian.h>
 // #include "fp_arch.h"
 
