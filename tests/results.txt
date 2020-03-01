@@ -1,5 +1,6 @@
 Thread model: posix
 gcc version 9.2.0 (Homebrew GCC 9.2.0_3)
+CPU: Intel Core i9 I9-9980HK
 
 log2(0.5 * log(x)):
 
