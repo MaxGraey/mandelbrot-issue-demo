@@ -199,6 +199,7 @@
           result = await WebAssembly.instantiate(buffer, { env: { ...defaultEnv, memory } });
           ok = true;
         } catch (e) {
+          console.error(e);
           result = null;
           ok = false;
         }
