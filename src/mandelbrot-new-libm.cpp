@@ -16,7 +16,7 @@ extern "C" {
   extern double js_log2_f64(double x);
 }
 
-uint16_t* image = (uint16_t*)0;
+uint16_t* image = (uint16_t*)16000;
 
 /** Clamps a value between the given minimum and maximum. */
 inline static double clamp(double value, double minValue, double maxValue) {

@@ -132,8 +132,10 @@
 
       const imageDatas = {};
 
+      const memoryBase = 16000;
+
       const defaultEnv = {
-        memoryBase: 0,
+        memoryBase,
         tableBase:  0,
         // for *-std-libm
         _llvm_log2_f64(x) {
@@ -164,7 +166,7 @@
         }
 
         const imageData = ctx.createImageData(width, height);
-        const mem  = new Uint16Array(memory.buffer, 0, size);
+        const mem  = new Uint16Array(memory.buffer, memoryBase, size + memoryBase);
         const argb = new Uint32Array(imageData.data.buffer);
 
         const updateLine = function updateLine(y) {
