@@ -63,9 +63,9 @@ int main() {
     double libc  =  log2(0.5 *  log(input)); // libc
     printf("\narg:    %.17g\n", input);
     printf("---------------------------------------------------\n");
-    printf("actual musl:% .17f (% .13a)\n", musl, musl);
-    printf("actual libc:% .17f (% .13a)\n", libc, libc);
-    printf("expected:   % .17f (% .13a)\n", orig, orig);
+    printf("actual musl: % .17f (% .13a)\n", musl, musl);
+    printf("actual libc: % .17f (% .13a)\n", libc, libc);
+    printf("orig (ideal):% .17f (% .13a)\n", orig, orig);
     printf("ULP diff (musl, libc): %llu\n", ulpDiffs(musl, libc));
     printf("ULP diff (musl, orig): %llu\n", ulpDiffs(musl, orig));
   }
