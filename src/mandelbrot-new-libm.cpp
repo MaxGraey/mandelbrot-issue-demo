@@ -9,6 +9,12 @@
 
 #define MIN(x,y)   ((x) < (y) ? (x) : (y))
 #define MAX(x,y)   ((x) > (y) ? (x) : (y))
+#define ABS(x)     ((signed)(x) < 0 ? -(x) : (x))
+
+extern "C" {
+  extern double js_log_f64(double x);
+  extern double js_log2_f64(double x);
+}
 
 uint16_t* image = (uint16_t*)0;
 
@@ -62,4 +68,28 @@ void EMSCRIPTEN_KEEPALIVE computeLine(uint32_t y, uint32_t width, uint32_t heigh
     }
     image[stride + x] = col;
   }
+}
+
+int64_t ulpDiff(double x, double y) {
+  if ((x != x) && (y != y)) return  0;
+  if ((x != x) || (y != y)) return -1;
+
+  int64_t lc = reinterpret_cast<int64_t&>(x);
+  int64_t rc = reinterpret_cast<int64_t&>(y);
+
+  if ((lc < 0) != (rc < 0)) {
+    return x == y ? 0 : -1;
+  }
+
+  return ABS(lc - rc);
+}
+
+double EMSCRIPTEN_KEEPALIVE computeLog2LogSqrt(double x) {
+  return _log2(0.5 * _log(x));
+}
+
+double EMSCRIPTEN_KEEPALIVE computeULP(double x) {
+  double actual    = _log2(0.5 * _log(x));
+  double excpected = js_log2_f64(0.5 * js_log_f64(x));
+  return double(ulpDiff(actual, excpected));
 }

@@ -150,8 +150,10 @@
 
       async function setup({ name, path }) {
         const exports     = await loadAndInit(path);
-        const computeLine = exports.computeLine;
         const memory      = exports.memory;
+        const computeLine = exports.computeLine;
+        const computeULP  = exports.computeULP;
+        const computeLog2LogSqrt = exports.computeLog2LogSqrt;
 
         if (!exports.ok) {
           const imageData = ctx.createImageData(width, height)
@@ -177,6 +179,23 @@
           updateLine(y);
         }
         imageDatas[name] = imageData;
+
+        const testInputs = [
+          11.142699413294427,
+          11.065634952247246,
+          11.234918042706195,
+          11.010710487354631
+        ];
+
+        if (name != 'js') {
+          console.log('');
+          console.log(`Test data sets for: ${ name }`);
+          testInputs.forEach(x => {
+            let value = computeLog2LogSqrt(x);
+            console.log(`arg: ${x}, result: ${value}, ULP = ${(computeULP(x)|0)}\n`);
+          });
+        }
+
         if (!window.location.hash) window.location.hash = '#js';
         if (name == window.location.hash.substr(1)) {
           const buttons = document.getElementsByName("btn-group");
@@ -200,12 +219,17 @@
           ok = true;
         } catch (e) {
           console.error(e);
-          result = null;
-          ok = false;
+          return {
+            ok: false,
+            computeLine: null,
+            computeULP: null,
+          };
         }
         return {
           ok,
-          computeLine:  ok ? result.instance.exports.__Z11computeLinejjjj : null,
+          computeLine: result.instance.exports.__Z11computeLinejjjj,
+          computeULP:  result.instance.exports.__Z10computeULPd,
+          computeLog2LogSqrt: result.instance.exports.__Z18computeLog2LogSqrtd,
           memory,
         };
       }
