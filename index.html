@@ -126,9 +126,9 @@
       const MANDELBROT_STD_LIBM_PATH = 'build/mandelbrot-std-libm.wasm';
       const MANDELBROT_BUG_LIBM_PATH = 'build/mandelbrot-new-libm.wasm';
 
-      setup('js',  MANDELBROT_JS_LIBM_PATH);
-      setup('std', MANDELBROT_STD_LIBM_PATH);
-      setup('bug', MANDELBROT_BUG_LIBM_PATH);
+      setup({ name: 'js',  path: MANDELBROT_JS_LIBM_PATH  });
+      setup({ name: 'std', path: MANDELBROT_STD_LIBM_PATH });
+      setup({ name: 'bug', path: MANDELBROT_BUG_LIBM_PATH });
 
       const imageDatas = {};
 
@@ -148,10 +148,18 @@
         }
       };
 
-      async function setup(name, path) {
+      async function setup({ name, path }) {
         const exports     = await loadAndInit(path);
         const computeLine = exports.computeLine;
         const memory      = exports.memory;
+
+        if (!exports.ok) {
+          const imageData = ctx.createImageData(width, height)
+          imageDatas[name] = imageData;
+          ctx.putImageData(imageData, 0, 0);
+          console.error(`Can't load wasm or instanciate "${path}" module!`);
+          return;
+        }
 
         const imageData = ctx.createImageData(width, height);
         const mem  = new Uint16Array(memory.buffer, 0, size);
@@ -184,11 +192,19 @@
 
       async function loadAndInit(name) {
         const memory = new WebAssembly.Memory({ initial: 256, maximum: 256 });
-        const res1   = await fetch(name);
-        const buffer = await res1.arrayBuffer();
-        const result = await WebAssembly.instantiate(buffer, { env: { ...defaultEnv, memory } });
+        let result, ok = false;
+        try {
+          const res1   = await fetch(name);
+          const buffer = await res1.arrayBuffer();
+          result = await WebAssembly.instantiate(buffer, { env: { ...defaultEnv, memory } });
+          ok = true;
+        } catch (e) {
+          result = null;
+          ok = false;
+        }
         return {
-          computeLine: result.instance.exports.__Z11computeLinejjjj,
+          ok,
+          computeLine:  ok ? result.instance.exports.__Z11computeLinejjjj : null,
           memory,
         };
       }
