@@ -14,7 +14,7 @@ extern "C" {
 #define MIN(x,y)   ((x) < (y) ? (x) : (y))
 #define MAX(x,y)   ((x) > (y) ? (x) : (y))
 
-uint16_t* image = (uint16_t*)0;
+uint16_t* image = (uint16_t*)16000;
 
 /** Clamps a value between the given minimum and maximum. */
 static inline double clamp(double value, double minValue, double maxValue) {
