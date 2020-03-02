@@ -8,33 +8,33 @@ arg:    9.3927236765809266
 ---------------------------------------------------
 actual musl: 0.16345706907289526 ( 0x1.4ec2946fbeaa4p-3)
 actual libc: 0.16345706907289556 ( 0x1.4ec2946fbeaafp-3)
-expected:    0.16345706907289556 ( 0x1.4ec2946fbeaafp-3)
+expected:    0.16345706907289526 ( 0x1.4ec2946fbeaa4p-3)
 ULP diff (musl, libc): 11
-ULP diff (musl, orig): 11
+ULP diff (musl, orig): 0
 
 arg:    7.1472609460361909
 ---------------------------------------------------
 actual musl:-0.02420167501517967 (-0x1.8c852eacb6240p-6)
 actual libc:-0.02420167501517983 (-0x1.8c852eacb626fp-6)
-expected:   -0.02420167501517983 (-0x1.8c852eacb626fp-6)
+expected:   -0.02420167501517967 (-0x1.8c852eacb6240p-6)
 ULP diff (musl, libc): 47
-ULP diff (musl, orig): 47
+ULP diff (musl, orig): 0
 
 arg:    8.6022119639857948
 ---------------------------------------------------
 actual musl: 0.10569106698702528 ( 0x1.b0e91dc304953p-4)
 actual libc: 0.10569106698702498 ( 0x1.b0e91dc30493dp-4)
-expected:    0.10569106698702498 ( 0x1.b0e91dc30493dp-4)
+expected:    0.10569106698702528 ( 0x1.b0e91dc304953p-4)
 ULP diff (musl, libc): 22
-ULP diff (musl, orig): 22
+ULP diff (musl, orig): 0
 
 arg:    4.1393111001367195
 ---------------------------------------------------
 actual musl:-0.49357133677466902 (-0x1.f96ac3b6c2c54p-2)
 actual libc:-0.49357133677466880 (-0x1.f96ac3b6c2c50p-2)
-expected:   -0.49357133677466880 (-0x1.f96ac3b6c2c50p-2)
+expected:   -0.49357133677466902 (-0x1.f96ac3b6c2c54p-2)
 ULP diff (musl, libc): 4
-ULP diff (musl, orig): 4
+ULP diff (musl, orig): 0
 
 arg:    7.4315542252720768
 ---------------------------------------------------
@@ -64,33 +64,33 @@ arg:    6.7053570880053828
 ---------------------------------------------------
 actual musl:-0.07179511755325035 (-0x1.2612a31e757f4p-4)
 actual libc:-0.07179511755325052 (-0x1.2612a31e75800p-4)
-expected:   -0.07179511755325052 (-0x1.2612a31e75800p-4)
+expected:   -0.07179511755325035 (-0x1.2612a31e757f4p-4)
 ULP diff (musl, libc): 12
-ULP diff (musl, orig): 12
+ULP diff (musl, orig): 0
 
 arg:    7.9882749579616181
 ---------------------------------------------------
 actual musl: 0.05517818373704185 ( 0x1.c40509d34e04ep-5)
 actual libc: 0.05517818373704216 ( 0x1.c40509d34e07ap-5)
-expected:    0.05517818373704216 ( 0x1.c40509d34e07ap-5)
+expected:    0.05517818373704185 ( 0x1.c40509d34e04ep-5)
 ULP diff (musl, libc): 44
-ULP diff (musl, orig): 44
+ULP diff (musl, orig): 0
 
 arg:    5.9556612706156526
 ---------------------------------------------------
 actual musl:-0.16460764573154818 (-0x1.511dd038b55b8p-3)
 actual libc:-0.16460764573154837 (-0x1.511dd038b55bfp-3)
-expected:   -0.16460764573154837 (-0x1.511dd038b55bfp-3)
+expected:   -0.16460764573154818 (-0x1.511dd038b55b8p-3)
 ULP diff (musl, libc): 7
-ULP diff (musl, orig): 7
+ULP diff (musl, orig): 0
 
 arg:    10.710280021076827
 ---------------------------------------------------
 actual musl: 0.24561980462807262 ( 0x1.f70784210514fp-3)
 actual libc: 0.24561980462807290 ( 0x1.f707842105159p-3)
-expected:    0.24561980462807290 ( 0x1.f707842105159p-3)
+expected:    0.24561980462807262 ( 0x1.f70784210514fp-3)
 ULP diff (musl, libc): 10
-ULP diff (musl, orig): 10
+ULP diff (musl, orig): 0
 
 arg:    8.5734617909015416
 ---------------------------------------------------
